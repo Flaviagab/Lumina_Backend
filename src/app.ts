@@ -1,11 +1,10 @@
-import express, { Router } from "express";
-import UsuarioController from "./controllers/usuarioController";
+import express from "express";
+import router from "./routes";
 
 const app = express();
 app.use(express.json());
 
-const router = Router();
-
-router.get('/usuario', UsuarioController.findAll);
+app.use(router);
 
 export default app;
+
