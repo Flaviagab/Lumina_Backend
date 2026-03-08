@@ -22,7 +22,7 @@ Usuario.init({
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: 'unique_email'
     },
     senha: {
         type: DataTypes.STRING,
@@ -31,7 +31,7 @@ Usuario.init({
     cpf: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: 'unique_cpf'
     }
 }, {
     sequelize,
