@@ -30,3 +30,5 @@ Autor.init({
     sequelize,
     tableName: "autor"
 })
+
+export default Autor;

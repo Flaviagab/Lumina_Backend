@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
+import Usuario from "./Usuario";
 
 class Pedido extends Model {
     public id_pedido!: number;
@@ -16,15 +17,19 @@ Pedido.init({
         primaryKey: true
     },
     id_usuario: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+       type: DataTypes.INTEGER,
+       allowNull: false,
+       references: {
+        model: "usuario",
+        key: "id_usuario"
+       }
     },
     data_pedido: {
         type: DataTypes.DATE,
         allowNull: false
     },
     valor_total: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false
     },
     status: {
@@ -35,5 +40,8 @@ Pedido.init({
     sequelize,
     tableName: "pedido"
 })
+
+Usuario.hasMany(Pedido, {foreignKey: 'id_usuario', as: 'pedidos'});
+Pedido.belongsTo(Usuario, {foreignKey: 'id_usuario', as: 'usuario'});
 
 export default Pedido;

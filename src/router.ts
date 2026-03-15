@@ -1,6 +1,8 @@
 import { Router } from "express";
 import UsuarioController from "./controllers/usuarioController";
+import CategoriaController from "./controllers/categoriaController";
 import { body } from "express-validator";
+import AutorController from "./controllers/autorController";
 
 const router = Router();
 
@@ -17,7 +19,18 @@ router.get("/usuarios/:id", UsuarioController.getById);
 router.delete("/usuarios/:id", UsuarioController.remove);
 router.put("/usuarios/:id", UsuarioController.update);
 
+router.get("/categorias", CategoriaController.findAll);
+router.post("/categorias", CategoriaController.create);
+router.get("/categorias/:id", CategoriaController.getById);
+router.delete("/categorias/:id", CategoriaController.remove);
+router.put("/categorias/:id", CategoriaController.update);
 
+
+router.get("/autores", AutorController.findAll);
+router.post("/autores", AutorController.create);
+router.get("/autores/:id", AutorController.getById);
+router.delete("/autores/:id", AutorController.remove);
+router.put("/autores/:id", AutorController.update);
 
 
 

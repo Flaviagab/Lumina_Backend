@@ -1,5 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
+import Autor from "./Autor";
+import Categoria from "./Categoria";
 
 class Livro extends Model {
     public id_livro!: number;
@@ -19,8 +21,12 @@ Livro.init({
         primaryKey: true
     },
     id_autor: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+       type: DataTypes.INTEGER,
+       allowNull: false,
+       references: {
+        model: "autor",
+        key: "id_autor"
+       }
     },
     titulo: {
         type: DataTypes.STRING,
@@ -43,12 +49,22 @@ Livro.init({
         allowNull: false
     },
     id_categoria: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+       type: DataTypes.INTEGER,
+       allowNull: false,
+       references: {
+        model: "categoria",
+        key: "id_categoria"
+       }
     }
 }, {
     sequelize,
     tableName: "livro"
 })
+
+Autor.hasMany(Livro, {foreignKey: 'id_autor', as: 'livros'});
+Livro.belongsTo(Autor, {foreignKey: 'id_autor', as: 'autor'});
+
+Categoria.hasMany(Livro, {foreignKey: 'id_categoria', as: 'livros'});
+Livro.belongsTo(Categoria, {foreignKey: 'id_categoria', as: 'categoria'});
 
 export default Livro;
