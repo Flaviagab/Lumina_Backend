@@ -3,6 +3,7 @@ import UsuarioController from "./controllers/usuarioController";
 import CategoriaController from "./controllers/categoriaController";
 import { body } from "express-validator";
 import AutorController from "./controllers/autorController";
+import upload from "./config/upload";
 
 const router = Router();
 
@@ -27,7 +28,7 @@ router.put("/categorias/:id", CategoriaController.update);
 
 
 router.get("/autores", AutorController.findAll);
-router.post("/autores", AutorController.create);
+router.post("/autores", upload.single("foto"), AutorController.create);
 router.get("/autores/:id", AutorController.getById);
 router.delete("/autores/:id", AutorController.remove);
 router.put("/autores/:id", AutorController.update);

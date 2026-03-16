@@ -35,7 +35,8 @@ class AutorController {
             return res.status(400).json({ erros: erros.array() });
         }
         try {
-            const { nome, biografia, foto } = req.body;
+            const { nome, biografia } = req.body;
+            const foto = req.file ? req.file.filename : null;
 
             const autor = await Autor.create({
                 nome,
