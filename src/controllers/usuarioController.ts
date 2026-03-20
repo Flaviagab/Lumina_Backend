@@ -36,14 +36,19 @@ class UsuarioController {
             return res.status(400).json({ erros: erros.array() });
         }
         try {
-            const { nome, email, senha, cpf } = req.body;
+            const { nome, email, senha, confirmarSenha, cpf } = req.body;
+
+            if (senha !== confirmarSenha) {
+                return res.status(400).json({ mensagem: "As senhas não são iguais!" });
+            }
+            const cpfLimpo = cpf.replace(/\D/g, "");
             const senhaHash = await bcrypt.hash(senha, 10);
 
             const usuario = await Usuario.create({
-                nome: nome,
-                email: email,
+                nome,
+                email,
                 senha: senhaHash,
-                cpf: cpf
+                cpf: cpfLimpo
             })
             return res.status(201).json(usuario);
         } catch (erro) {
@@ -59,7 +64,14 @@ class UsuarioController {
         try {
             const { id } = req.params;
             const { nome, email, senha, cpf } = req.body;
+            const cpfLimpo = cpf ? cpf.replace(/\D/g, "") : cpf;
             const usuario = await Usuario.findByPk(Number(id));
+
+            if (!cpf && !nome && !email && !senha) {
+                return res.status(400).json({
+                    mensagem: "Nenhum dado foi enviado para atualização"
+                });
+            }
 
             if (!usuario) {
                 return res.status(404).json({ mensagem: "Usuário não encontrado" });
@@ -72,10 +84,10 @@ class UsuarioController {
                 senhaHash = await bcrypt.hash(senha, 10);
             }
             await usuario.update({
-                nome: nome,
-                email: email,
+                nome,
+                email,
                 senha: senhaHash,
-                cpf: cpf
+                cpf: cpfLimpo
             });
             return res.status(200).json({ mensagem: "Usuário atualizado com sucesso" });
 
@@ -96,11 +108,52 @@ class UsuarioController {
 
             await usuario.destroy();
             return res.status(200).json({ mensagem: "Usuário removido com sucesso" });
-            
+
         } catch (error) {
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
 
+    }
+
+    static async login(req: Request, res: Response) {
+        try {
+            const { email, senha } = req.body;
+
+            if (!email || !senha) {
+                return res.status(400).json({
+                    mensagem: "Email e senha são obrigatórios"
+                });
+            }
+
+            const usuario = await Usuario.findOne({
+                where: { email }
+            });
+
+            if (!usuario) {
+                return res.status(401).json({
+                    mensagem: "Email ou senha inválidos"
+                });
+            }
+
+            const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+
+            if (!senhaCorreta) {
+                return res.status(401).json({
+                    mensagem: "Email ou senha inválidos"
+                });
+            }
+
+            return res.status(200).json({
+                mensagem: "Login realizado com sucesso",
+                usuario
+            });
+
+        } catch (erro) {
+            console.error("Erro no login:", erro);
+            return res.status(500).json({
+                mensagem: "Erro interno do servidor"
+            });
+        }
     }
 
 }

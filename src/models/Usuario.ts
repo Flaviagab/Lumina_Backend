@@ -2,12 +2,11 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 
 class Usuario extends Model {
-    public id_usuario!: number;
-    public nome!: string;
-    public email!: string;
-    public senha!: string;
-    public cpf!: string;
-    public tipo!: "usuario" | "admin";
+    declare id_usuario: number;
+    declare nome: string;
+    declare email: string;
+    declare senha: string;
+    declare cpf: string;
 }
 
 Usuario.init({
@@ -34,11 +33,6 @@ Usuario.init({
         allowNull: false,
         unique: 'unique_cpf'
     },
-    tipo: {
-        type: DataTypes.ENUM("usuario", "admin"),
-        allowNull: false,
-        defaultValue: "usuario"
-    }
 }, {
     sequelize,
     tableName: "usuario"

@@ -19,6 +19,7 @@ router.post("/usuarios", validarCadastro, UsuarioController.create);
 router.get("/usuarios/:id", UsuarioController.getById);
 router.delete("/usuarios/:id", UsuarioController.remove);
 router.put("/usuarios/:id", UsuarioController.update);
+router.post("/entrar", UsuarioController.login);
 
 router.get("/categorias", CategoriaController.findAll);
 router.post("/categorias", CategoriaController.create);
