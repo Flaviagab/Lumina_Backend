@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Usuario from "../models/Usuario";
 import bcrypt from "bcrypt";
 import { validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 
 class UsuarioController {
     static async findAll(req: Request, res: Response) {
@@ -143,9 +144,22 @@ class UsuarioController {
                 });
             }
 
+            const token = jwt.sign(
+                {
+                    id: usuario.id_usuario,
+                    email: usuario.email
+                },
+                process.env.SECRET as string
+            );
+
             return res.status(200).json({
                 mensagem: "Login realizado com sucesso",
-                usuario
+                token,
+                usuario: {
+                    id: usuario.id_usuario,
+                    nome: usuario.nome,
+                    email: usuario.email
+                }
             });
 
         } catch (erro) {
