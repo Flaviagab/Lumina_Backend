@@ -3,6 +3,7 @@ import Usuario from "../models/Usuario";
 import bcrypt from "bcrypt";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
+import { AuthRequest } from "../types/AuthRequest";
 
 class UsuarioController {
     static async findAll(req: Request, res: Response) {
@@ -64,11 +65,11 @@ class UsuarioController {
         }
         try {
             const { id } = req.params;
-            const { nome, email, senha, cpf } = req.body;
+            const { nome, senha, cpf } = req.body;
             const cpfLimpo = cpf ? cpf.replace(/\D/g, "") : cpf;
             const usuario = await Usuario.findByPk(Number(id));
 
-            if (!cpf && !nome && !email && !senha) {
+            if (!cpf && !nome && !senha) {
                 return res.status(400).json({
                     mensagem: "Nenhum dado foi enviado para atualização"
                 });
@@ -86,7 +87,6 @@ class UsuarioController {
             }
             await usuario.update({
                 nome,
-                email,
                 senha: senhaHash,
                 cpf: cpfLimpo
             });
@@ -158,7 +158,8 @@ class UsuarioController {
                 usuario: {
                     id: usuario.id_usuario,
                     nome: usuario.nome,
-                    email: usuario.email
+                    email: usuario.email,
+                    cpf: usuario.cpf
                 }
             });
 
@@ -167,6 +168,26 @@ class UsuarioController {
             return res.status(500).json({
                 mensagem: "Erro interno do servidor"
             });
+        }
+    }
+
+    static async perfil(req: AuthRequest, res: Response) {
+        try {
+            const usuario = await Usuario.findByPk(req.user!.id);
+
+            if (!usuario) {
+                return res.status(404).json({ mensagem: "Usuário não encontrado" });
+            }
+
+            return res.json({
+                id: usuario.id_usuario,
+                nome: usuario.nome,
+                email: usuario.email,
+                cpf: usuario.cpf
+            });
+
+        } catch (erro) {
+            return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
     }
 
