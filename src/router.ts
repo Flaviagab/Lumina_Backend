@@ -5,6 +5,7 @@ import { body } from "express-validator";
 import AutorController from "./controllers/autorController";
 import { AutenticarToken } from "./middlewares/auth";
 import upload from "./config/upload";
+import LivroController from "./controllers/livroController";
 
 const router = Router();
 
@@ -34,6 +35,10 @@ router.post("/autores", upload.single("foto"), AutenticarToken, AutorController.
 router.get("/autores/:id", AutorController.getById);
 router.delete("/autores/:id", AutorController.remove);
 router.put("/autores/:id", AutorController.update);
+
+
+router.post("/livros",upload.fields([{ name: "capa_imagem", maxCount: 1 }, { name: "arquivo_pdf", maxCount: 1 }]),LivroController.create);
+
 
 router.get("/perfil", AutenticarToken, UsuarioController.perfil)
 

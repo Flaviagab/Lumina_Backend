@@ -39,24 +39,29 @@ class LivroController {
     }
 
     static async create(req: Request, res: Response) {
-
-        const erros = validationResult(req);
-        if (!erros.isEmpty()) {
-            return res.status(400).json({ erros: erros.array() });
-        }
         try {
-            const { id_autor, titulo, descricao, preco, capa_imagem, arquivo_pdf, id_categoria } = req.body;
 
+            const { id_autor, titulo, descricao, preco, id_categoria } = req.body;
+
+            const arquivos = req.files as {
+                [fieldname: string]: Express.Multer.File[];
+            };
+
+            const capa = arquivos?.["capa_imagem"]?.[0];
+            const pdf = arquivos?.["arquivo_pdf"]?.[0];
+            
             const livro = await Livro.create({
                 id_autor,
                 titulo,
                 descricao,
                 preco,
-                capa_imagem,
-                arquivo_pdf,
-                id_categoria
-            })
+                id_categoria,
+                capa_imagem: capa ? capa.filename : null,
+                arquivo_pdf: pdf ? pdf.filename : null
+            });
+
             return res.status(201).json(livro);
+
         } catch (erro) {
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
