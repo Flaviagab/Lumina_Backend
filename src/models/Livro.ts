@@ -12,6 +12,7 @@ class Livro extends Model {
     public capa_imagem!: string;
     public arquivo_pdf!: string;
     public id_categoria!: number;
+    public destaque!: boolean;
 }
 
 Livro.init({
@@ -21,12 +22,12 @@ Livro.init({
         primaryKey: true
     },
     id_autor: {
-       type: DataTypes.INTEGER,
-       allowNull: false,
-       references: {
-        model: "autor",
-        key: "id_autor"
-       }
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: "autor",
+            key: "id_autor"
+        }
     },
     titulo: {
         type: DataTypes.STRING,
@@ -49,22 +50,27 @@ Livro.init({
         allowNull: false
     },
     id_categoria: {
-       type: DataTypes.INTEGER,
-       allowNull: false,
-       references: {
-        model: "categoria",
-        key: "id_categoria"
-       }
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: "categoria",
+            key: "id_categoria"
+        }
+    },
+    destaque: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     sequelize,
     tableName: "livro"
-})
+});
 
-Autor.hasMany(Livro, {foreignKey: 'id_autor', as: 'livros'});
-Livro.belongsTo(Autor, {foreignKey: 'id_autor', as: 'autor'});
+Autor.hasMany(Livro, { foreignKey: 'id_autor', as: 'livros' });
+Livro.belongsTo(Autor, { foreignKey: 'id_autor', as: 'autor' });
 
-Categoria.hasMany(Livro, {foreignKey: 'id_categoria', as: 'livros'});
-Livro.belongsTo(Categoria, {foreignKey: 'id_categoria', as: 'categoria'});
+Categoria.hasMany(Livro, { foreignKey: 'id_categoria', as: 'livros' });
+Livro.belongsTo(Categoria, { foreignKey: 'id_categoria', as: 'categoria' });
 
 export default Livro;

@@ -41,7 +41,7 @@ class LivroController {
     static async create(req: Request, res: Response) {
         try {
 
-            const { id_autor, titulo, descricao, preco, id_categoria } = req.body;
+            const { id_autor, titulo, descricao, preco, id_categoria, destaque } = req.body;
 
             const arquivos = req.files as {
                 [fieldname: string]: Express.Multer.File[];
@@ -57,7 +57,8 @@ class LivroController {
                 preco,
                 id_categoria,
                 capa_imagem: capa ? capa.filename : null,
-                arquivo_pdf: pdf ? pdf.filename : null
+                arquivo_pdf: pdf ? pdf.filename : null,
+                destaque
             });
 
             return res.status(201).json(livro);
@@ -74,7 +75,7 @@ class LivroController {
         }
         try {
             const { id } = req.params;
-            const { id_autor, titulo, descricao, preco, capa_imagem, arquivo_pdf, id_categoria } = req.body;
+            const { id_autor, titulo, descricao, preco, capa_imagem, arquivo_pdf, id_categoria, destaque } = req.body;
             const livro = await Livro.findByPk(Number(id));
 
             if (!livro) {
@@ -88,7 +89,8 @@ class LivroController {
                 preco,
                 capa_imagem,
                 arquivo_pdf,
-                id_categoria
+                id_categoria,
+                destaque
             });
             return res.status(200).json({ mensagem: "Livro atualizado com sucesso" });
 
