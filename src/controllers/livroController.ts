@@ -3,20 +3,24 @@ import Livro from "../models/Livro";
 import { validationResult } from "express-validator";
 
 class LivroController {
-    static async findAll(req: Request, res: Response) {
-        try {
-            const livro = await Livro.findAll({
-                include: [
-                    { association: "autor" },
-                    { association: "categoria" }
-                ]
-            });
-            return res.send(livro);
 
-        } catch (erro) {
-            return res.status(500).json({ mensagem: "Erro interno do servidor" });
-        }
+    static async findAll(req: Request, res: Response) {
+    console.log("🔥 ROTA /livros FOI CHAMADA");
+
+    try {
+        const livro = await Livro.findAll({
+            include: [
+                { association: "autor" },
+                { association: "categoria" }
+            ]
+        });
+
+        return res.send(livro);
+
+    } catch (erro) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
+}
 
     static async getById(req: Request, res: Response) {
         try {

@@ -36,9 +36,8 @@ router.get("/autores/:id", AutorController.getById);
 router.delete("/autores/:id", AutorController.remove);
 router.put("/autores/:id", AutorController.update);
 
-
+router.get("/livros", LivroController.findAll);
 router.post("/livros",upload.fields([{ name: "capa_imagem", maxCount: 1 }, { name: "arquivo_pdf", maxCount: 1 }]),LivroController.create);
-
 
 router.get("/perfil", AutenticarToken, UsuarioController.perfil)
 
