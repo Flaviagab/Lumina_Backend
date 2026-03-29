@@ -37,5 +37,6 @@ router.get("/livros/:id", LivroController.getById);
 router.delete("/livros/:id", AutenticarToken, LivroController.remove);
 router.put("/livros/:id", AutenticarToken, LivroController.update);
 
+router.get("/autores/:id/livros", AutorController.findByAutor);
 
 export default router;

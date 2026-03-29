@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Autor from "../models/Autor";
 import { validationResult } from "express-validator";
+import Livro from "../models/Livro";
 
 class AutorController {
     static async findAll(req: Request, res: Response) {
@@ -27,6 +28,22 @@ class AutorController {
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
     }
+
+    static async findByAutor(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const livros = await Livro.findAll({
+            where: { id_autor: Number(id) },
+            include: [
+                { association: "autor" },
+                { association: "categoria" }
+            ]
+        });
+        return res.json(livros);
+    } catch (erro) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
+}
 
     static async create(req: Request, res: Response) {
 
