@@ -1,23 +1,17 @@
 import { Router } from "express";
 import UsuarioController from "./controllers/usuarioController";
 import CategoriaController from "./controllers/categoriaController";
-import { body } from "express-validator";
 import AutorController from "./controllers/autorController";
 import { AutenticarToken } from "./middlewares/auth";
 import upload from "./config/upload";
 import LivroController from "./controllers/livroController";
+import { validarUsuario } from "./middlewares/validarUsuario";
+import { validarErros } from "./middlewares/validarErros";
 
 const router = Router();
 
-const validarCadastro = [
-    body("nome").notEmpty().withMessage("O nome é obrigatório"),
-    body("email").isEmail().withMessage("Insira um email válido"),
-    body("senha").isLength({ min: 6 }).withMessage("Senha deve ter ao menos 6 caracteres"),
-    body("cpf").notEmpty().withMessage("O cpf é obrigatório")
-]
-
 router.get("/usuarios", AutenticarToken, UsuarioController.findAll);
-router.post("/usuarios", validarCadastro, UsuarioController.create);
+router.post("/usuarios", validarUsuario, validarErros, UsuarioController.create);
 router.get("/usuarios/:id", UsuarioController.getById);
 router.delete("/usuarios/:id", AutenticarToken, UsuarioController.remove);
 router.put("/usuarios/:id", AutenticarToken, UsuarioController.update);
@@ -42,9 +36,6 @@ router.post("/livros",upload.fields([{ name: "capa_imagem", maxCount: 1 }, { nam
 router.get("/livros/:id", LivroController.getById);
 router.delete("/livros/:id", AutenticarToken, LivroController.remove);
 router.put("/livros/:id", AutenticarToken, LivroController.update);
-
-
-
 
 
 export default router;

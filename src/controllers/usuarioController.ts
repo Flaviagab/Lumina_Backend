@@ -32,18 +32,11 @@ class UsuarioController {
     }
 
     static async create(req: Request, res: Response) {
-
-        const erros = validationResult(req);
-        if (!erros.isEmpty()) {
-            return res.status(400).json({ erros: erros.array() });
-        }
         try {
-            const { nome, email, senha, confirmarSenha, cpf } = req.body;
+            const { nome, email, senha, cpf } = req.body;
 
-            if (senha !== confirmarSenha) {
-                return res.status(400).json({ mensagem: "As senhas não são iguais!" });
-            }
             const cpfLimpo = cpf.replace(/\D/g, "");
+
             const senhaHash = await bcrypt.hash(senha, 10);
 
             const usuario = await Usuario.create({
@@ -53,8 +46,9 @@ class UsuarioController {
                 cpf: cpfLimpo
             })
             return res.status(201).json(usuario);
+
         } catch (erro) {
-            return res.status(500).json({ mensagem: "Erro interno do servidor" });
+            return res.status(500).json({ mensagem: "Erro interno do servidor", erro });
         }
     }
 
@@ -66,8 +60,11 @@ class UsuarioController {
         try {
             const { id } = req.params;
             const { nome, senha, cpf } = req.body;
-            const cpfLimpo = cpf ? cpf.replace(/\D/g, "") : cpf;
             const usuario = await Usuario.findByPk(Number(id));
+
+            if (!usuario) {
+                return res.status(404).json({ mensagem: "Usuário não encontrado" });
+            }
 
             if (!cpf && !nome && !senha) {
                 return res.status(400).json({
@@ -75,16 +72,16 @@ class UsuarioController {
                 });
             }
 
-            if (!usuario) {
-                return res.status(404).json({ mensagem: "Usuário não encontrado" });
-
-            }
-
             let senhaHash = usuario.senha;
-
             if (senha) {
                 senhaHash = await bcrypt.hash(senha, 10);
             }
+
+            const cpfLimpo = cpf ? cpf.replace(/\D/g, "") : usuario.cpf;
+            if (!cpf.isValid(cpfLimpo)) {
+                return res.status(400).json({ mensagem: "CPF inválido" });
+            }
+
             await usuario.update({
                 nome,
                 senha: senhaHash,
