@@ -33,3 +33,22 @@ export const validarUsuario = [
             return true;
         })
 ];
+
+export const validarAtualizacaoUsuario = [
+    body("nome")
+        .notEmpty().withMessage("O nome é obrigatório"),
+
+    body("senha")
+        .optional({ nullable: true, checkFalsy: true })
+        .isLength({ min: 6 }).withMessage("Senha deve ter no mínimo 6 caracteres")
+        .matches(/[A-Z]/).withMessage("Senha deve ter pelo menos 1 letra maiúscula")
+        .matches(/[^A-Za-z0-9]/).withMessage("Senha deve ter pelo menos 1 caractere especial"),
+
+    body("cpf")
+        .notEmpty().withMessage("O CPF é obrigatório")
+        .custom((value) => {
+            const cpfLimpo = value.replace(/\D/g, "");
+            if (!cpf.isValid(cpfLimpo)) throw new Error("CPF inválido");
+            return true;
+        })
+];

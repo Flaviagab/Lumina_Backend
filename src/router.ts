@@ -5,7 +5,7 @@ import AutorController from "./controllers/autorController";
 import { AutenticarToken } from "./middlewares/auth";
 import upload from "./config/upload";
 import LivroController from "./controllers/livroController";
-import { validarUsuario } from "./middlewares/validarUsuario";
+import { validarAtualizacaoUsuario, validarUsuario } from "./middlewares/validarUsuario";
 import { validarErros } from "./middlewares/validarErros";
 
 const router = Router();
@@ -14,8 +14,9 @@ router.get("/usuarios", AutenticarToken, UsuarioController.findAll);
 router.post("/usuarios", validarUsuario, validarErros, UsuarioController.create);
 router.get("/usuarios/:id", UsuarioController.getById);
 router.delete("/usuarios/:id", AutenticarToken, UsuarioController.remove);
-router.put("/usuarios/:id", AutenticarToken, UsuarioController.update);
+router.put("/usuarios/:id", AutenticarToken, validarAtualizacaoUsuario, UsuarioController.update);
 router.post("/entrar", UsuarioController.login);
+router.get("/perfil", AutenticarToken, UsuarioController.perfil);
 
 router.get("/categorias", CategoriaController.findAll);
 router.post("/categorias", AutenticarToken, CategoriaController.create);

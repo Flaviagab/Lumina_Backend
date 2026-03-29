@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import { AuthRequest } from "../types/AuthRequest";
+import { cpf as cpfValidator } from "cpf-cnpj-validator";
 
 class UsuarioController {
     static async findAll(req: Request, res: Response) {
@@ -78,7 +79,7 @@ class UsuarioController {
             }
 
             const cpfLimpo = cpf ? cpf.replace(/\D/g, "") : usuario.cpf;
-            if (!cpf.isValid(cpfLimpo)) {
+            if (cpf && !cpfValidator.isValid(cpfLimpo)) {
                 return res.status(400).json({ mensagem: "CPF inválido" });
             }
 
@@ -90,6 +91,7 @@ class UsuarioController {
             return res.status(200).json({ mensagem: "Usuário atualizado com sucesso" });
 
         } catch (erro) {
+            console.error("Erro no update:", erro);
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
 
