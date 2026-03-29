@@ -5,22 +5,30 @@ import { validationResult } from "express-validator";
 class LivroController {
 
     static async findAll(req: Request, res: Response) {
-    console.log("🔥 ROTA /livros FOI CHAMADA");
 
-    try {
-        const livro = await Livro.findAll({
-            include: [
-                { association: "autor" },
-                { association: "categoria" }
-            ]
-        });
+        try {
+            const { categoria } = req.query;
 
-        return res.send(livro);
+            const where: any = {};
 
-    } catch (erro) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+            if (categoria) {
+                where.id_categoria = Number(categoria);
+            }
+
+            const livro = await Livro.findAll({
+                where,
+                include: [
+                    { association: "autor" },
+                    { association: "categoria" }
+                ]
+            });
+
+            return res.send(livro);
+
+        } catch (erro) {
+            return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        }
     }
-}
 
     static async getById(req: Request, res: Response) {
         try {
@@ -72,7 +80,7 @@ class LivroController {
         }
     }
 
-    static async update(req: Request, res: Response) { //
+    static async update(req: Request, res: Response) {
         const erros = validationResult(req);
         if (!erros.isEmpty()) {
             return res.status(400).json({ erros: erros.array() });
@@ -87,7 +95,7 @@ class LivroController {
             }
 
             await livro.update({
-                id_autor, //
+                id_autor,
                 titulo,
                 descricao,
                 preco,
@@ -102,7 +110,6 @@ class LivroController {
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
     }
-
 
     static async remove(req: Request, res: Response) {
         try {
@@ -119,9 +126,7 @@ class LivroController {
         } catch (erro) {
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
-
     }
-
 }
 
 export default LivroController;
