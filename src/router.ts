@@ -37,7 +37,7 @@ router.post("/livros", upload.fields([{ name: "capa_imagem", maxCount: 1 }, { na
 router.get("/livros/destaque", LivroController.getDestaques); 
 router.get("/livros/:id", LivroController.getById);           
 router.delete("/livros/:id", AutenticarToken, LivroController.remove);
-router.put("/livros/:id", AutenticarToken, LivroController.update);
+router.put("/livros/:id", upload.fields([{ name: "capa_imagem", maxCount: 1 }, { name: "arquivo_pdf", maxCount: 1 }]), AutenticarToken, LivroController.update);
 
 router.get("/autores/:id/livros", AutorController.findByAutor);
 
