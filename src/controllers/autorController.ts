@@ -73,18 +73,16 @@ class AutorController {
         }
         try {
             const { id } = req.params;
-            const { nome, biografia, foto } = req.body;
+            const { nome, biografia } = req.body;
             const autor = await Autor.findByPk(Number(id));
 
             if (!autor) {
                 return res.status(404).json({ mensagem: "Autor não encontrado" });
             }
 
-            await autor.update({
-                nome,
-                biografia,
-                foto
-            });
+            const foto = req.file ? req.file.filename : autor.foto;
+
+            await autor.update({ nome, biografia, foto });
             return res.status(200).json({ mensagem: "Autor atualizado com sucesso" });
 
         } catch (erro) {

@@ -8,8 +8,6 @@ import LivroController from "./controllers/livroController";
 import { validarAtualizacaoUsuario, validarUsuario } from "./middlewares/validarUsuario";
 import { validarErros } from "./middlewares/validarErros";
 
-console.log("LivroController:", LivroController); // 👈 AQUI
-
 const router = Router();
 
 router.get("/usuarios", AutenticarToken, UsuarioController.findAll);
@@ -32,7 +30,7 @@ router.get("/autores", AutorController.findAll);
 router.post("/autores", upload.single("foto"), AutenticarToken, AutorController.create);
 router.get("/autores/:id", AutorController.getById);
 router.delete("/autores/:id", AutenticarToken, AutorController.remove);
-router.put("/autores/:id", AutenticarToken, AutorController.update);
+router.put("/autores/:id", upload.single("foto"), AutenticarToken, AutorController.update);
 
 router.get("/livros", LivroController.findAll);
 router.post("/livros", upload.fields([{ name: "capa_imagem", maxCount: 1 }, { name: "arquivo_pdf", maxCount: 1 }]), AutenticarToken, LivroController.create);
