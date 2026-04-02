@@ -20,6 +20,11 @@ Categoria.init({
     descricao: {
         type: DataTypes.TEXT,
         allowNull: false
+    },
+    destaque: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     sequelize,

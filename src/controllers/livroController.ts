@@ -127,6 +127,23 @@ class LivroController {
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
     }
+
+    static async getDestaques(req: Request, res: Response) {
+    try {
+        const livros = await Livro.findAll({
+            where: { destaque: true },
+            include: [
+                { association: "autor" },
+                { association: "categoria" }
+            ]
+        });
+
+        return res.status(200).json(livros);
+
+    } catch (erro) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
+}
 }
 
 export default LivroController;
