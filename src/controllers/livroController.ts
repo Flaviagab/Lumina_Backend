@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Livro from "../models/Livro";
 import { validationResult } from "express-validator";
+import { WhereOptions } from "sequelize";
 
 class LivroController {
 
@@ -9,7 +10,7 @@ class LivroController {
         try {
             const { categoria } = req.query;
 
-            const where: any = {};
+            const where: WhereOptions = {};
 
             if (categoria) {
                 where.id_categoria = Number(categoria);
@@ -62,15 +63,21 @@ class LivroController {
             const capa = arquivos?.["capa_imagem"]?.[0];
             const pdf = arquivos?.["arquivo_pdf"]?.[0];
 
+            if (!capa || !pdf) {
+                return res.status(400).json({
+                    mensagem: "Arquivos obrigatórios"
+                });
+            }
+
             const livro = await Livro.create({
                 id_autor,
                 titulo,
                 descricao,
-                preco,
+                preco:  parseFloat(String(preco).replace(",", ".")),
                 id_categoria,
-                capa_imagem: capa ? capa.filename : null,
-                arquivo_pdf: pdf ? pdf.filename : null,
-                destaque
+                capa_imagem: capa.filename,
+                arquivo_pdf: pdf.filename,
+                destaque: destaque === "true"
             });
 
             return res.status(201).json(livro);
@@ -99,17 +106,17 @@ class LivroController {
             const capa_imagem = arquivos?.["capa_imagem"]?.[0]?.filename ?? livro.capa_imagem;
             const arquivo_pdf = arquivos?.["arquivo_pdf"]?.[0]?.filename ?? livro.arquivo_pdf;
 
-
             await livro.update({
                 id_autor,
                 titulo,
                 descricao,
-                preco,
+                preco:  parseFloat(String(preco).replace(",", ".")),
                 capa_imagem,
                 arquivo_pdf,
                 id_categoria,
-                destaque
+                destaque: destaque === "true"
             });
+    
             return res.status(200).json({ mensagem: "Livro atualizado com sucesso" });
 
         } catch (erro) {

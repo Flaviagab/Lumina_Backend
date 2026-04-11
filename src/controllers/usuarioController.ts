@@ -46,7 +46,12 @@ class UsuarioController {
                 senha: senhaHash,
                 cpf: cpfLimpo
             })
-            return res.status(201).json(usuario);
+            return res.status(201).json({
+                id: usuario.id_usuario,
+                nome: usuario.nome,
+                email: usuario.email,
+                cpf: usuario.cpf
+            });
 
         } catch (erro) {
             return res.status(500).json({ mensagem: "Erro interno do servidor", erro });
@@ -148,7 +153,7 @@ class UsuarioController {
                     id: usuario.id_usuario,
                     email: usuario.email
                 },
-                process.env.SECRET as string
+                process.env.SECRET as string, { expiresIn: "1d" }
             );
 
             return res.status(200).json({

@@ -62,7 +62,7 @@ class CategoriaController {
     }
     try {
       const { id } = req.params;
-      const { nome, descricao } = req.body;
+      const { nome, descricao, destaque } = req.body;
       const categoria = await Categoria.findByPk(Number(id));
 
       if (!categoria) {
@@ -70,8 +70,9 @@ class CategoriaController {
       }
 
       await categoria.update({
-        nome: nome,
-        descricao: descricao,
+        nome,
+        descricao,
+        destaque
       });
       return res
         .status(200)

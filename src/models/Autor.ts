@@ -2,10 +2,10 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 
 class Autor extends Model {
-    public id_autor!: number;
-    public nome!: string;
-    public biografia!: string;
-    public foto!: string;
+    declare id_autor: number;
+    declare nome: string;
+    declare biografia: string;
+    declare foto: string;
 }
 
 Autor.init({

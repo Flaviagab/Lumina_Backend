@@ -4,15 +4,15 @@ import Autor from "./Autor";
 import Categoria from "./Categoria";
 
 class Livro extends Model {
-    public id_livro!: number;
-    public id_autor!: number;
-    public titulo!: string;
-    public descricao!: string;
-    public preco!: number;
-    public capa_imagem!: string;
-    public arquivo_pdf!: string;
-    public id_categoria!: number;
-    public destaque!: boolean;
+    declare id_livro: number;
+    declare id_autor: number;
+    declare titulo: string;
+    declare descricao: string;
+    declare preco: number;
+    declare capa_imagem: string;
+    declare arquivo_pdf: string;
+    declare id_categoria: number;
+    declare destaque: boolean;
 }
 
 Livro.init({
