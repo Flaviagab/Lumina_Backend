@@ -6,7 +6,7 @@ import { Livro } from "../types/Livro";
 
 describe("Livros", () => {
 
-    const token = "fake-token";
+    const token = "token";
 
     const caminhoImagem = path.resolve(__dirname, "files/teste.jpg");
     const caminhoPdf = path.resolve(__dirname, "files/teste.pdf");

@@ -45,6 +45,12 @@ class CategoriaController {
     try {
       const { nome, descricao } = req.body;
 
+      if (!nome || !descricao) {
+        return res.status(400).json({
+          mensagem: "Nome e descrição são obrigatórios"
+        });
+      }
+
       const categoria = await Categoria.create({
         nome: nome,
         descricao: descricao,

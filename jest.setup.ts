@@ -5,7 +5,7 @@ import sequelize from "./src/config/database";
 beforeAll(async () => {
   try {
     await sequelize.sync({ force: true });
-    console.log("Banco de teste (SQLite) iniciado");
+    console.log("Banco de teste iniciado");
   } catch (error) {
     console.error("Erro ao iniciar banco de teste:", error);
   }

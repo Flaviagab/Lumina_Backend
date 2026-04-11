@@ -10,7 +10,7 @@ class AutorController {
             return res.send(autor);
 
         } catch (erro) {
-            return res.status(500).json({ mensagem: "Erro interno do servidor"});
+            return res.status(500).json({ mensagem: "Erro interno do servidor" });
         }
     }
 
@@ -30,20 +30,20 @@ class AutorController {
     }
 
     static async findByAutor(req: Request, res: Response) {
-    try {
-        const { id } = req.params;
-        const livros = await Livro.findAll({
-            where: { id_autor: Number(id) },
-            include: [
-                { association: "autor" },
-                { association: "categoria" }
-            ]
-        });
-        return res.json(livros);
-    } catch (erro) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        try {
+            const { id } = req.params;
+            const livros = await Livro.findAll({
+                where: { id_autor: Number(id) },
+                include: [
+                    { association: "autor" },
+                    { association: "categoria" }
+                ]
+            });
+            return res.json(livros);
+        } catch (erro) {
+            return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        }
     }
-}
 
     static async create(req: Request, res: Response) {
 
@@ -54,6 +54,12 @@ class AutorController {
         try {
             const { nome, biografia } = req.body;
             const foto = req.file ? req.file.filename : null;
+
+            if (!nome || !biografia) {
+                return res.status(400).json({
+                    mensagem: "Nome e biografia são obrigatórios"
+                });
+            }
 
             const autor = await Autor.create({
                 nome,
