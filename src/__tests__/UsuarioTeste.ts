@@ -96,7 +96,7 @@ describe("Usuários", () => {
                     cpf: "52998224725"
                 });
 
-            expect(resposta.status).toBe(404);
+            expect(resposta.status).toBe(403);
         });
 
     });

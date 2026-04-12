@@ -33,7 +33,7 @@ class UsuarioController {
     }
 
     static async create(req: Request, res: Response) {
-        
+
         const erros = validationResult(req);
         if (!erros.isEmpty()) {
             return res.status(400).json({ erros: erros.array() });
@@ -64,13 +64,18 @@ class UsuarioController {
         }
     }
 
-    static async update(req: Request, res: Response) {
+    static async update(req: AuthRequest, res: Response) {
         const erros = validationResult(req);
         if (!erros.isEmpty()) {
             return res.status(400).json({ erros: erros.array() });
         }
         try {
             const { id } = req.params;
+
+            if (Number(id) !== req.usuario!.id) {
+                return res.status(403).json({ mensagem: "Acesso negado" });
+            }
+
             const { nome, senha, cpf } = req.body;
             const usuario = await Usuario.findByPk(Number(id));
 
@@ -183,7 +188,7 @@ class UsuarioController {
 
     static async perfil(req: AuthRequest, res: Response) {
         try {
-            const usuario = await Usuario.findByPk(req.user!.id);
+            const usuario = await Usuario.findByPk(req.usuario!.id);
 
             if (!usuario) {
                 return res.status(404).json({ mensagem: "Usuário não encontrado" });

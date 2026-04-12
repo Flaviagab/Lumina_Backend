@@ -5,7 +5,7 @@ import { AuthRequest, TokenPayload } from "../types/AuthRequest";
 export function AutenticarToken(req: AuthRequest, res: Response, next: NextFunction) {
 
     if (process.env.NODE_ENV === "test") {
-        req.user = { id: 1 } as any;
+        req.usuario = { id: 1 } as any;
         return next();
     }
 
@@ -25,7 +25,7 @@ export function AutenticarToken(req: AuthRequest, res: Response, next: NextFunct
             process.env.SECRET as string
         ) as TokenPayload;
 
-        req.user = decoded;
+        req.usuario = decoded;
 
         next();
 

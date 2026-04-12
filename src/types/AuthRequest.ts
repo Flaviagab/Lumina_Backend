@@ -6,5 +6,5 @@ export interface TokenPayload {
 }
 
 export interface AuthRequest extends Request {
-    user?: TokenPayload;
+        usuario?: TokenPayload;
 }
