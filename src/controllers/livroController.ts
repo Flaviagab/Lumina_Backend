@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import Livro from "../models/Livro";
 import { validationResult } from "express-validator";
 import { WhereOptions } from "sequelize";
+import path from "node:path";
+import fs from "fs";
 
 class LivroController {
 
@@ -73,7 +75,7 @@ class LivroController {
                 id_autor,
                 titulo,
                 descricao,
-                preco:  parseFloat(String(preco).replace(",", ".")),
+                preco: parseFloat(String(preco).replace(",", ".")),
                 id_categoria,
                 capa_imagem: capa.filename,
                 arquivo_pdf: pdf.filename,
@@ -110,13 +112,13 @@ class LivroController {
                 id_autor,
                 titulo,
                 descricao,
-                preco:  parseFloat(String(preco).replace(",", ".")),
+                preco: parseFloat(String(preco).replace(",", ".")),
                 capa_imagem,
                 arquivo_pdf,
                 id_categoria,
                 destaque: destaque === "true"
             });
-    
+
             return res.status(200).json({ mensagem: "Livro atualizado com sucesso" });
 
         } catch (erro) {
@@ -155,6 +157,29 @@ class LivroController {
 
         } catch (erro) {
             return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        }
+    }
+
+    static async abrirPdf(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+
+            const livro = await Livro.findByPk(Number(id));
+
+            if (!livro) {
+                return res.status(404).json({ erro: "Livro não encontrado" });
+            }
+
+            const caminhoPdf = path.resolve("uploads", livro.arquivo_pdf);
+
+            if (!fs.existsSync(caminhoPdf)) {
+                return res.status(404).json({ erro: "Arquivo não encontrado" });
+            }
+
+            return res.sendFile(caminhoPdf);
+
+        } catch (erro) {
+            return res.status(500).json({ erro: "Erro ao abrir PDF" });
         }
     }
 }

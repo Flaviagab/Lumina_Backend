@@ -33,8 +33,8 @@ describe("Categorias", () => {
             expect(resposta.status).toBe(200);
             expect(Array.isArray(resposta.body)).toBe(true);
 
-            resposta.body.forEach((cat: any) => {
-                expect(cat.destaque).toBe(true);
+            resposta.body.forEach((categoria:{ destaque: boolean }) => {
+                expect(categoria.destaque).toBe(true);
             });
         });
     });
