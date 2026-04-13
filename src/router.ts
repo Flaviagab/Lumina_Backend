@@ -2,7 +2,7 @@ import { Router } from "express";
 import UsuarioController from "./controllers/usuarioController";
 import CategoriaController from "./controllers/categoriaController";
 import AutorController from "./controllers/autorController";
-import { AutenticarToken } from "./middlewares/auth";
+import { AutenticarToken } from "./middlewares/autenticarToken";
 import upload from "./config/upload";
 import LivroController from "./controllers/livroController";
 import { validarAtualizacaoUsuario, validarUsuario } from "./middlewares/validarUsuario";
